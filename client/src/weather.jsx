@@ -2,7 +2,6 @@ import searchIcon from "./assets/search.svg";
 import locationIcon from "./assets/location.svg";
 import { useState, useEffect } from "react";
 const API_KEY = import.meta.env.VITE_OPENWEATHER_KEY;
-console.log(Boolean(API_KEY));
 export const WeatherApp = () => {
   //weather data states
   const [weatherData, setWeatherData] = useState(null);
