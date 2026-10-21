@@ -9,7 +9,7 @@ Search any city to see its current temperatrue, humidity, wind speed and weather
 - Shows temperature, weather icon, humidity, wind speed (km/h) and description
 - Loading and error states (for example, "City not found")
 - Responsive layout for phone, tablet and desktop
-- API key stored in an environment variable, not in the code
+- The Open Weather API key is kept on the Express server, so it is never exposed to the browser.
 
 ## Teck Stack
 
@@ -17,13 +17,23 @@ Search any city to see its current temperatrue, humidity, wind speed and weather
 - Vite
 - OpenWeather Current Weather API
 - CSS (flexbox, clamp, media queries)
+- Express, Node.js
 
 ## Run Locally
 
-1. Clone this repository and open the `client` folder
-2. Run `npm install`
-3. Copy `.env.example` to `.env.local` and add your own free Openweather API key
-4. Run `npm run dev`
+You need two terminals.
+
+**1. Start the API server**
+
+1. Open the `server` folder and run `npm install`
+2. Copy `.env.example` to `.env` and add your free OpenWeather API key
+3. Run `npm run dev` (starts on http://localhost:5000)
+
+**2. Start the React app**
+
+1. Open the `client` folder and run `npm install`
+2. Copy `.env.example` to `.env.local`
+3. Run `npm run dev` (opens on http://localhost:5173)
 
 ## What I learned
 

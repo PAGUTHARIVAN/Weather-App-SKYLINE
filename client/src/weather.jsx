@@ -1,7 +1,7 @@
 import searchIcon from "./assets/search.svg";
 import locationIcon from "./assets/location.svg";
 import { useState, useEffect } from "react";
-const API_KEY = import.meta.env.VITE_OPENWEATHER_KEY;
+const API_URL = import.meta.env.VITE_API_URL;
 export const WeatherApp = () => {
   //weather data states
   const [weatherData, setWeatherData] = useState(null);
@@ -24,8 +24,9 @@ export const WeatherApp = () => {
         setLoading(true);
         setError("");
         const res = await fetch(
-          `https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(city)}&appid=${API_KEY}&units=metric`,
+          `${API_URL}/api/weather?city=${encodeURIComponent(city)}`,
         );
+
         if (!res.ok) {
           if (res.status === 404) throw new Error("City not found!");
           throw new Error("Fetch failed: " + res.status);
@@ -33,7 +34,11 @@ export const WeatherApp = () => {
         const data = await res.json();
         setWeatherData(data);
       } catch (err) {
-        setError(err.message);
+        setError(
+          err instanceof TypeError
+            ? "Cannot reach the server. Please try again later."
+            : err.message,
+        );
         setWeatherData(null);
       } finally {
         setLoading(false);
@@ -53,8 +58,6 @@ export const WeatherApp = () => {
     console.log(cityTrimmed);
     setNewCity("");
   };
-  const condition = weatherData?.weather?.[0];
-  const msToKmh = (ms) => ms * 3.6;
   const regionNames = new Intl.DisplayNames(["en"], { type: "region" });
   return (
     <>
@@ -95,36 +98,36 @@ export const WeatherApp = () => {
         {weatherData && !loading && (
           <div className="display-container">
             <div className="weather-image">
-              {condition && (
+              {weatherData.icon && (
                 <img
-                  src={`https://openweathermap.org/img/wn/${condition.icon}@2x.png`}
-                  alt={condition.description}
+                  src={`https://openweathermap.org/img/wn/${weatherData.icon}@2x.png`}
+                  alt={weatherData.description}
                 />
               )}
             </div>
             <div className="celsius">
-              <h2>{Math.round(weatherData.main.temp)}°C</h2>
+              <h2>{Math.round(weatherData.temp)}°C</h2>
             </div>
             <div className="city-name">
-              <h2>{weatherData.name}</h2>
+              <h2>{weatherData.city}</h2>
               <p>
-                {weatherData.sys?.country
-                  ? `${regionNames.of(weatherData.sys.country)}`
+                {weatherData.country
+                  ? `${regionNames.of(weatherData.country)}`
                   : ""}
               </p>
             </div>
             <div className="details">
               <div className="humidity">
                 <h4>Humidity</h4>
-                <p>{weatherData.main.humidity}%</p>
+                <p>{weatherData.humidity}%</p>
               </div>
               <div className="speed">
                 <h4>Wind speed</h4>
-                <p>{msToKmh(weatherData.wind.speed).toFixed(1)} km/h</p>
+                <p>{(weatherData.windSpeed * 3.6).toFixed(1)} km/h</p>
               </div>
               <div className="description">
                 <h4>Description</h4>
-                <p>{condition.description}</p>
+                <p>{weatherData.description}</p>
               </div>
             </div>
           </div>
