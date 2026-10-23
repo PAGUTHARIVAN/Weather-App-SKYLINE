@@ -3,7 +3,7 @@ import express from "express";
 import cors from "cors";
 
 const app = express();
-
+app.disable("x-powered-by");
 const allowedOrigins = (
   process.env.CLIENT_URL || "http://localhost:5173,http://127.0.0.1:5173"
 )
@@ -58,7 +58,7 @@ app.get("/api/weather", async (req, res) => {
       temp: data.main.temp,
       humidity: data.main.humidity,
       windSpeed: data.wind.speed,
-      description: data.weather?.[0].description,
+      description: data.weather?.[0]?.description,
       icon: data.weather?.[0]?.icon,
     });
   } catch (err) {
